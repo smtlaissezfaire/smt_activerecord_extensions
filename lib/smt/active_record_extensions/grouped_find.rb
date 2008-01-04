@@ -8,7 +8,7 @@ module SMT
       # This wraps ActiveRecord::Base#find(:all), yielding each record as if
       # you had used find(:all).each { |record| }
       def find_in_groups_of(num, hash={})
-          number_of_items = self.count
+        number_of_items = self.count
         offset = 0
 
         while number_of_items > 0
