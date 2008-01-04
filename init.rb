@@ -1,3 +1,3 @@
 class ActiveRecord::Base
-  extend ActiveRecordExtensions::GroupedFind
+  extend SMT::ActiveRecordExtensions::GroupedFind
 end
