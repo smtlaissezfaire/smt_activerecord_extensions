@@ -8,6 +8,8 @@ module SMT
       # This wraps ActiveRecord::Base#find(:all), yielding each record as if
       # you had used find(:all).each { |record| }
       def find_in_groups_of(num, hash={})
+        raise LocalJumpError, "no block given" if !block_given?
+        
         number_of_items = self.count
         offset = 0
 
