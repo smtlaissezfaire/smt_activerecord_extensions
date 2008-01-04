@@ -4,3 +4,6 @@ files.each do |file|
   require file
 end
 
+class ActiveRecord::Base
+  extend SMT::ActiveRecordExtensions::GroupedFind
+end
