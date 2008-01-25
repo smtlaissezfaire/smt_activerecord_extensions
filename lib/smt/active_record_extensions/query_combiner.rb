@@ -17,30 +17,38 @@ module SMT
     class QueryCombiner < Array
       def &(other)
         if_not_empty(other) do
-          QueryCombiner.new ["(#{query_string}) AND (#{other.query_string})", *combine_values(other)]
+          combine_grouped(other, "AND")
         end
       end
       
       def and(other)
         if_not_empty(other) do
-          QueryCombiner.new ["#{query_string} AND #{other.query_string}", *combine_values(other)]
+          combine_without_groups(other, "AND")          
         end
       end
       
       def or(other)
         if_not_empty(other) do
-          QueryCombiner.new ["#{query_string} OR #{other.query_string}", *combine_values(other)]
+          combine_without_groups(other, "OR")
         end
       end
       
       def |(other)
         if_not_empty(other) do
-          QueryCombiner.new ["(#{query_string}) OR (#{other.query_string})", *combine_values(other)]
+          combine_grouped(other, "OR")
         end
       end
       
     protected
     
+      def combine_without_groups(other, combinator)
+        QueryCombiner.new ["#{query_string} #{combinator} #{other.query_string}", *combine_values(other)]
+      end
+    
+      def combine_grouped(other, combinator)
+        QueryCombiner.new ["(#{query_string}) #{combinator} (#{other.query_string})", *combine_values(other)]
+      end
+      
       def if_not_empty(other)
         if self.empty?
           QueryCombiner.new other
