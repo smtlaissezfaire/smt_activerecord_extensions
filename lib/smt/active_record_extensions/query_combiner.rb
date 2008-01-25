@@ -16,29 +16,51 @@ module SMT
     # as such.
     class QueryCombiner < Array
       def &(other)
-        QueryCombiner.new ["(#{query_string}) AND (#{other.query_string})", *combine_values(other)]
+        if_not_empty(other) do
+          QueryCombiner.new ["(#{query_string}) AND (#{other.query_string})", *combine_values(other)]
+        end
       end
       
       def and(other)
-        QueryCombiner.new ["#{query_string} AND #{other.query_string}", *combine_values(other)]
+        if_not_empty(other) do
+          QueryCombiner.new ["#{query_string} AND #{other.query_string}", *combine_values(other)]
+        end
       end
       
       def or(other)
-        QueryCombiner.new ["#{query_string} OR #{other.query_string}", *combine_values(other)]
+        if_not_empty(other) do
+          QueryCombiner.new ["#{query_string} OR #{other.query_string}", *combine_values(other)]
+        end
       end
       
       def |(other)
-        QueryCombiner.new ["(#{query_string}) OR (#{other.query_string})", *combine_values(other)]
+        if_not_empty(other) do
+          QueryCombiner.new ["(#{query_string}) OR (#{other.query_string})", *combine_values(other)]
+        end
       end
       
     protected
+    
+      def if_not_empty(other)
+        if self.empty?
+          QueryCombiner.new other
+        elsif other.empty?
+          self
+        else
+          yield
+        end
+      end
     
       def combine_values(arg)
         self.values + arg.values
       end
       
       def values
-        self[1..self.size]
+        if self.empty?
+          []
+        else
+          self[1..self.size]
+        end
       end      
       
       def query_string

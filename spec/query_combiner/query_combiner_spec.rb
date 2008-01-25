@@ -33,6 +33,18 @@ module SMT
         three = QueryCombiner.new ["baz = 7"]
         (one & two & three).should == ["((foo = 7) AND (bar = 7)) AND (baz = 7)"]
       end
+      
+      it "should return just the second element, if the first element is empty" do
+        one = QueryCombiner.new []
+        two = QueryCombiner.new ["foo = 7"]
+        (one & two).should == ["foo = 7"]
+      end
+      
+      it "should return just the first element, if the second element is empty" do
+        one = QueryCombiner.new ["foo = 7"]
+        two = QueryCombiner.new []
+        (one & two).should == ["foo = 7"]
+      end
     end
     
     describe QueryCombiner, "and" do      
@@ -59,6 +71,18 @@ module SMT
         two = QueryCombiner.new ["bar = 7"]
         three = QueryCombiner.new ["baz = 7"]
         (one.and(two).and(three)).should == ["foo = 7 AND bar = 7 AND baz = 7"]
+      end
+      
+      it "should return just the second element, if the first element is empty" do
+        one = QueryCombiner.new []
+        two = QueryCombiner.new ["foo = 7"]
+        (one.and two).should == ["foo = 7"]
+      end
+      
+      it "should return just the first element, if the second element is empty" do
+        one = QueryCombiner.new ["foo = 7"]
+        two = QueryCombiner.new []
+        (one.and two).should == ["foo = 7"]
       end
     end
     
@@ -87,6 +111,18 @@ module SMT
         three = QueryCombiner.new ["baz = 7"]
         (one.or(two).or(three)).should == ["foo = 7 OR bar = 7 OR baz = 7"]
       end
+      
+      it "should return just the second element, if the first element is empty" do
+        one = QueryCombiner.new []
+        two = QueryCombiner.new ["foo = 7"]
+        (one.or two).should == ["foo = 7"]
+      end
+      
+      it "should return just the first element, if the second element is empty" do
+        one = QueryCombiner.new ["foo = 7"]
+        two = QueryCombiner.new []
+        (one.or two).should == ["foo = 7"]
+      end      
     end
     
     describe QueryCombiner, "|" do
@@ -113,6 +149,18 @@ module SMT
         two = QueryCombiner.new ["bar = 7"]
         three = QueryCombiner.new ["baz = 7"]
         (one | two | three).should == ["((foo = 7) OR (bar = 7)) OR (baz = 7)"]
+      end
+      
+      it "should return just the second element, if the first element is empty" do
+        one = QueryCombiner.new []
+        two = QueryCombiner.new ["foo = 7"]
+        (one | two).should == ["foo = 7"]
+      end
+      
+      it "should return just the first element, if the second element is empty" do
+        one = QueryCombiner.new ["foo = 7"]
+        two = QueryCombiner.new []
+        (one | two).should == ["foo = 7"]
       end
     end
   end
