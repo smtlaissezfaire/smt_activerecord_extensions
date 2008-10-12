@@ -1,11 +1,10 @@
 require 'rubygems'
 require 'active_record'
-require File.dirname(__FILE__) + "/../lib/smt"
-
-require 'rubygems'
 require 'sqlite3'
 require 'active_record'
 require 'active_support'
+
+require File.dirname(__FILE__) + "/../lib/smt"
 
 ActiveRecord::Base.establish_connection :adapter => 'sqlite3', :database  => ':memory:'
 ActiveRecord::Migration.verbose = false
