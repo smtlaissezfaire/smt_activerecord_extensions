@@ -7,17 +7,17 @@ module SMT
       #
       # This wraps ActiveRecord::Base#find(:all), yielding each record as if
       # you had used find(:all).each { |record| }
-      def find_in_groups_of(num, hash={})
-        number_of_items = self.count
+      def find_in_groups_of(limit, options_hash={ })
+        number_of_items = self.count(options_hash)
         offset = 0
-
+        
         while number_of_items > 0
-          self.find(:all, hash.merge(:limit => num, :offset => offset)).each do |record|
+          find(:all, options_hash.merge(:limit => limit, :offset => offset)).each do |record|
             yield record
           end
-
-          number_of_items -= num
-          offset += num
+          
+          number_of_items -= limit
+          offset          += limit
         end
       end
     end
