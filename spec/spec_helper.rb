@@ -18,3 +18,17 @@ ActiveRecord::Schema.define do
 end
 
 class User < ActiveRecord::Base; end
+
+class ActiveRecord::Base
+  def self.subclasses
+    @@subclasses[ActiveRecord::Base]
+  end
+end
+
+Spec::Runner.configure do |config|
+  config.prepend_before(:each) do
+    ActiveRecord::Base.subclasses.each do |subclass|
+      subclass.delete_all
+    end
+  end
+end

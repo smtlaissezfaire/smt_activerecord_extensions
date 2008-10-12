@@ -3,10 +3,6 @@ require File.dirname(__FILE__) + "/../../spec_helper"
 module SMT
   module ActiveRecordExtensions
     describe GroupedFind do
-      before(:each) do
-        User.delete_all
-      end
-      
       describe "finding a record" do
         it "should find the first record with no hash" do
           u = User.create!
