@@ -64,17 +64,12 @@ module SMT
       end
       
       def values
-        if self.empty?
-          []
-        else
-          self[1..self.size]
-        end
+        self[1..self.size]
       end      
       
       def query_string
         self[0]
       end
-      
     end
   end
 end
