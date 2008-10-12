@@ -1,0 +1,3 @@
+[submodule "vendor/smt_rake_tasks"]
+	path = vendor/smt_rake_tasks
+	url = git://github.com/smtlaissezfaire/smt_rake_tasks.git
