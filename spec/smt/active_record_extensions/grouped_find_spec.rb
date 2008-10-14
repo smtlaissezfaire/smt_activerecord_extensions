@@ -110,6 +110,33 @@ module SMT
           User.find_in_groups_of(1, :select => "users.*") { |user| users << user }
           users.should == [user]
         end
+        
+        it "should use the total count of the table if count returns an [] (because there's a group condition)" do
+          User.stub!(:count).and_return 2
+          
+          users = []
+          user = User.create!(:first_name => "Scott")
+          User.find_in_groups_of(1, :select => "users.*") { |user| users << user }
+          users.should == [user]
+        end
+        
+        it "should count the whole table if the original query returns an array" do
+          User.should_receive(:count).with(:foo => :bar, :select => "*").and_return []
+          User.should_receive(:count).with(no_args).and_return 0
+          
+          User.stub!(:find).and_return []
+          
+          User.find_in_groups_of(1, :foo => :bar) { }
+        end
+        
+        it "should count the whole table if the original count of the first query returns something other than a number" do
+          User.should_receive(:count).with(:foo => :bar, :select => "*").and_return Object.new
+          User.should_receive(:count).with(no_args).and_return 0
+          
+          User.stub!(:find).and_return []
+          
+          User.find_in_groups_of(1, :foo => :bar) { }
+        end
       end
     end
   end
