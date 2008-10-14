@@ -103,6 +103,13 @@ module SMT
           User.should_receive(:count).with({:select => "*"}).and_return 0
           User.find_in_groups_of(2, {:select => "foo.*"})
         end
+        
+        it "should find the records with count(column_name)" do
+          user = User.create!(:first_name => "Scott")
+          users = []
+          User.find_in_groups_of(1, :select => "users.*") { |user| users << user }
+          users.should == [user]
+        end
       end
     end
   end
