@@ -98,6 +98,11 @@ module SMT
           User.should_receive(:find).twice.and_return([mock('a user'), mock('a user')])
           User.find_in_groups_of(2) { |user| }
         end
+        
+        it "should use count(*), even when passed a series of column names" do
+          User.should_receive(:count).with({:select => "*"}).and_return 0
+          User.find_in_groups_of(2, {:select => "foo.*"})
+        end
       end
     end
   end
