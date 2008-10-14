@@ -1,8 +1,8 @@
 require 'rubygems'
 require 'active_record'
-require 'sqlite3'
-require 'active_record'
 require 'active_support'
+require 'sqlite3'
+
 
 require File.dirname(__FILE__) + "/../lib/smt"
 
