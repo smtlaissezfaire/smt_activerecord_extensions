@@ -5,7 +5,6 @@ require 'active_support'
 require 'sqlite3'
 
 require File.dirname(__FILE__) + "/../lib/smt"
-
 require File.dirname(__FILE__) + "/spec_helpers"
 
 Spec::Runner.configure do |config|
@@ -15,3 +14,5 @@ Spec::Runner.configure do |config|
     end
   end
 end
+
+TestUnitRemover.remove!

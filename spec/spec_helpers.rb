@@ -18,3 +18,16 @@ class ActiveRecord::Base
   end
 end
 
+module TestUnitRemover
+  def self.remove!
+    require "active_record"
+
+    if defined?(Test)
+      Object.instance_eval do
+        remove_const(:Test)
+      end
+    end
+  end
+end
+
+
