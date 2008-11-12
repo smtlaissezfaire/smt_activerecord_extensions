@@ -137,6 +137,54 @@ module SMT
           
           User.find_in_groups_of(1, :foo => :bar) { }
         end
+        
+        it "should not raise an error on the count with an IN (?) clause" do
+          User.create!
+          user_ids = User.find(:all)
+          
+          lambda {
+            User.find_in_groups_of(1, :conditions => ["users.id IN (?)", user_ids]) {}
+          }.should_not raise_error
+        end
+        
+        it "should not raise an error when an eager include is given" do
+          User.create!
+          user_ids = User.find(:all)
+          
+          lambda {
+            User.find_in_groups_of(1, :conditions => ["users.id IN (?)", user_ids], :include => :comments) {}
+          }.should_not raise_error
+        end
+        
+        it "should not raise an error when a join is given" do |variable|
+          user = User.create!
+          user_ids = User.find(:all)
+          user.comments.create!
+          
+          lambda {
+            User.find_in_groups_of(1, :conditions => ["users.id IN (?)", user_ids], :joins => "INNER JOIN comments on comments.user_id = users.id") {}
+          }.should_not raise_error
+        end
+        
+        it "should find the correct number with a join" do
+          user = User.create!
+          user_ids = User.find(:all)
+          2.times { user.comments.create! }
+          
+          counter = 0
+          User.find_in_groups_of(1, :conditions => ["users.id IN (?)", user_ids], :joins => "OUTER JOIN comments on comments.user_id = users.id") { |user| counter += 1 }
+          counter.should equal(2)
+        end
+        
+        it "should find the correct number of users with an eager include" do
+          user = User.create!
+          user_ids = User.find(:all)
+          2.times { user.comments.create! }
+          
+          counter = 0
+          User.find_in_groups_of(1, :conditions => ["users.id IN (?)", user_ids], :joins => "OUTER JOIN comments on comments.user_id = users.id") { |user| counter += 1 }
+          counter.should equal(2)
+        end
       end
     end
   end

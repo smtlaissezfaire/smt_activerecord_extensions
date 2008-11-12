@@ -8,9 +8,20 @@ ActiveRecord::Schema.define do
     t.string :last_name
     t.timestamps
   end
+  
+  create_table :comments do |t|
+    t.string :text
+    t.integer :user_id
+  end
 end
 
-class User < ActiveRecord::Base; end
+class User < ActiveRecord::Base
+  has_many :comments
+end
+
+class  Comment < ActiveRecord::Base
+  belongs_to :user
+end
 
 class ActiveRecord::Base
   def self.subclasses
