@@ -1,6 +1,8 @@
 module SMT
   module ActiveRecordExtensions
     module GroupedFind
+      class WillPaginateError < StandardError; end
+      
       # Using find(:all).each is often terrible inefficient.  It's a memory
       # hog.  Usually finding the records in groups, and then iterating through
       # those groups is a better solution.
@@ -8,6 +10,10 @@ module SMT
       # This wraps ActiveRecord::Base#find(:all), yielding each record as if
       # you had used find(:all).each { |record| }
       def find_in_groups_of(limit, options_hash={ })
+        unless respond_to?(:paginate)
+          raise WillPaginateError, "Will Paginate (or another pagination method) must be loaded"
+        end
+        
         empty_collection = false
         page = 1
         

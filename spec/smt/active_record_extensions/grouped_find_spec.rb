@@ -71,6 +71,13 @@ module SMT
           User.find_in_groups_of(1, :conditions => ["users.id IN (?)", user_ids], :joins => "OUTER JOIN comments on comments.user_id = users.id") { |user| counter += 1 }
           counter.should equal(2)
         end
+        
+        it "should raise an error if the ActiveRecord class object doesn't respond to paginate" do
+          User.stub!(:respond_to?).with(:paginate).and_return false
+          lambda {
+            User.find_in_groups_of(1)
+          }.should raise_error(GroupedFind::WillPaginateError, "Will Paginate (or another pagination method) must be loaded")
+        end
       end
     end
   end
