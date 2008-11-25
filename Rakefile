@@ -22,3 +22,5 @@ rake_tasks =  File.dirname(__FILE__) + "/vendor/smt_rake_tasks"
 require "#{rake_tasks}/spec"
 require "#{rake_tasks}/rspec_rcov"
 require "#{rake_tasks}/flog"
+
+task :default => :spec
