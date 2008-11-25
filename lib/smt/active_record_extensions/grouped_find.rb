@@ -8,24 +8,17 @@ module SMT
       # This wraps ActiveRecord::Base#find(:all), yielding each record as if
       # you had used find(:all).each { |record| }
       def find_in_groups_of(limit, options_hash={ })
-        def count_items(options)
-          count_options = options.dup
-          count_options.delete(:include)
+        empty_collection = false
+        page = 1
+        
+        while !empty_collection
+          collection = paginate(:all, options_hash.merge!(:page => page, :per_page => limit))
+          empty_collection = collection.empty?
           
-          number_of_items = count(count_options.merge(:select => "*"))
-          number_of_items.kind_of?(Numeric) ? number_of_items : count
-        end
-        
-        number_of_items = count_items(options_hash)
-        offset = 0
-        
-        while number_of_items > 0
-          find(:all, options_hash.merge(:limit => limit, :offset => offset)).each do |record|
-            yield record
+          collection.each do |record|
+            yield(record)
           end
-          
-          number_of_items -= limit
-          offset          += limit
+          page += 1
         end
       end
     end
